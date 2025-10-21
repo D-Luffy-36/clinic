@@ -94,6 +94,10 @@ CREATE TABLE IF NOT EXISTS treatment_courses (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
 
+ALTER TABLE treatment_courses
+ADD COLUMN total_cost DECIMAL(12,2) DEFAULT 0.00;
+
+
 -- Bảng treatment_details
 CREATE TABLE IF NOT EXISTS treatment_details (
                                                  id BIGSERIAL PRIMARY KEY,

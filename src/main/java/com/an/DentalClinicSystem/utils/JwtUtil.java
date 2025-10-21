@@ -3,14 +3,20 @@ package com.an.DentalClinicSystem.utils;
 import com.an.DentalClinicSystem.service.CustomUserDetails;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
+
+@Slf4j
 @Component
 public class JwtUtil {
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
 
     @Value("${JWT_SECRET}")
     private String SECRET_KEY;
@@ -33,8 +39,19 @@ public class JwtUtil {
 
 
     public String extractUsername(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token).getBody().getSubject();
+        try {
+            return Jwts.parser()
+                    .setSigningKey(SECRET_KEY)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+        } catch (io.jsonwebtoken.ExpiredJwtException ex) {
+            log.warn("JWT expired at {}: {}", ex.getClaims().getExpiration(), ex.getMessage());
+            throw ex;
+        } catch (Exception ex) {
+            log.error("JWT error: {}", ex.getMessage());
+            throw ex;
+        }
     }
 
     public boolean validateToken(String token, CustomUserDetails userDetails) {

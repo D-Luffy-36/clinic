@@ -2,14 +2,16 @@ package com.an.DentalClinicSystem.dto.request;
 
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Builder
+
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-
 public class LoginRequest {
 
     @NotBlank(message = "Username không được để trống")

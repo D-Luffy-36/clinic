@@ -10,8 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 @AllArgsConstructor
 
 public class UserController {
@@ -19,9 +21,15 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/info")
-    @PreAuthorize("hasRole('ROLE_PATIENT')")
     public ResponseEntity<UserResponse> getUserInfo(HttpServletRequest request) {
         UserResponse response = userService.getUserInfo(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/patients")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
+        List<UserResponse> response = userService.getAllPatients();
         return ResponseEntity.ok(response);
     }
 
@@ -36,13 +44,14 @@ public class UserController {
      */
 /* <<<<<<<<<<  f89d4c46-d982-4e56-9a45-512944f44597  >>>>>>>>>>> */
     @PutMapping("/update-me")
-    @PreAuthorize("hasRole('ROLE_PATIENT')")
+    @PreAuthorize("hasAnyAuthority('ROLE_PATIENT', 'ROLE_ADMIN', 'ROLE_DOCTOR')")
     public ResponseEntity<?> updateUser(@RequestBody UpdateUserRequest updateUserRequest, HttpServletRequest request) {
         UserResponse userResponse = userService.updateUser(request, updateUserRequest);
         return ResponseEntity.ok(userResponse);
     }
 
     @DeleteMapping
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> deleteUser() {
         // TODO: Implement logic
         return ResponseEntity.ok("User deleted");

@@ -4,6 +4,7 @@ package com.an.DentalClinicSystem.service;
 import com.an.DentalClinicSystem.dto.request.UpdateUserRequest;
 import com.an.DentalClinicSystem.dto.response.UserResponse;
 import com.an.DentalClinicSystem.entity.User;
+import com.an.DentalClinicSystem.mapper.UserMapper;
 import com.an.DentalClinicSystem.repository.UserRepository;
 import com.an.DentalClinicSystem.utils.JwtUtil;
 import com.an.DentalClinicSystem.utils.UpdateUtils;
@@ -14,6 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Service
 @AllArgsConstructor
@@ -22,6 +25,7 @@ public class UserService {
     private final UpdateUtils updateUtils;
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
+
 
     public String getTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
@@ -69,6 +73,10 @@ public class UserService {
         // Bước 5: Trả về DTO
         return UserResponse.toUserResponse(user);
 
+    };
+
+    public List<UserResponse> getAllPatients() {
+        return userRepository.findUsersByRoleName("patient").stream().map(UserResponse::toUserResponse).toList();
     };
 //
 //    public UserResponse deleteUser(User user) {
