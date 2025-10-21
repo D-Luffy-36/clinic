@@ -19,10 +19,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login( @Valid @RequestBody LoginRequest request) {
-        LoginResponse response = LoginResponse.builder()
-                .token("abc123")
-                .message("Login successful")
-                .build();
+        LoginResponse response = authService.login(request);
         return ResponseEntity.ok(response);
     }
 

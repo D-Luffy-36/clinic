@@ -20,8 +20,9 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        String roleName = user.getRole().getName().toUpperCase(); // hoặc toLowerCase nếu bạn dùng ROLE_patient
         // Giả sử Role là Enum hoặc String, bạn có thể map sang SimpleGrantedAuthority
-        return Collections.singleton(() -> "ROLE_" + user.getRole().getName());
+        return Collections.singleton(() -> "ROLE_" + roleName);
     }
 
     @Override
